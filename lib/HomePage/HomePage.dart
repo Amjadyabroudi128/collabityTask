@@ -231,8 +231,12 @@ class _MyHomePageState extends State<MyHomePage> {
           autofocus: true,
           decoration: InputDecoration(
             hintText: "Update task title",
-            border: OutlineInputBorder(
+            enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide(color: Colors.black, width: 2.0),
             ),
           ),
           onFieldSubmitted: (value) {

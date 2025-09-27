@@ -65,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ListView.builder(
                 itemCount: _tasks.length,
                 itemBuilder: (context, index) {
+                  final task = _tasks[index];
                   return Dismissible(
                     background: Container(
                       alignment: Alignment.centerRight,
@@ -74,11 +75,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Icon(Icons.delete, color: Colors.white),
                       ),
                     ),
-                    key: ValueKey(_tasks[index]["id"]),
+                    key: ValueKey(task["id"]),
                     direction: DismissDirection.endToStart,
                     onDismissed: (_) {
                       final deletedTask =
-                          _tasks[index]["title"]; // store before removing
+                          task["title"]; // store before removing
                       setState(() {
                         _tasks.removeAt(index);
                       });
@@ -111,18 +112,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ListTile(
                         leading: Checkbox(
                           activeColor: Colors.green,
-                          value: _tasks[index]["done"],
+                          value: task["done"],
                           onChanged: (value) {
                             setState(() {
-                              _tasks[index]["done"] = value ?? false;
+                              task["done"] = value ?? false;
                             });
                           },
                         ),
                         title: Text(
-                          _tasks[index]["title"],
+                          task["title"],
                           style: TextStyle(
                             fontSize: 16,
-                            decoration: _tasks[index]["done"]
+                            decoration: task["done"]
                                 ? TextDecoration.lineThrough
                                 : TextDecoration.none,
                           ),
@@ -137,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             }
                             if (value == "delete") {
                               final deletedTask =
-                                  _tasks[index]["title"]; // store before removing
+                                  task["title"]; // store before removing
                               await deleteTask(context, index, deletedTask);
                             }
                           },
@@ -221,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final current = _tasks[index]["title"] as String;
     final controller = TextEditingController(text: current);
 
-    final newTitle = await showDialog<String>(
+     await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("Edit Task"),
@@ -239,14 +240,34 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(null),
+            onPressed: () => Navigator.of(ctx).pop(),
             child: const Text("Cancel"),
           ),
           TextButton(
             onPressed: () {
               final trimmed = controller.text.trim();
-              if (trimmed.isNotEmpty) {
-                Navigator.of(ctx).pop(trimmed);
+              if (trimmed.isEmpty) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please add something')),
+                  );
+                }
+              } else if (trimmed == current.trim()) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Nothing has changed')),
+                  );
+                }
+              } else {
+                setState(() {
+                  _tasks[index]["title"] = trimmed;
+                });
+                Navigator.of(ctx).pop();
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Task has been updated')),
+                  );
+                }
               }
             },
             child: const Text("Save"),
@@ -254,17 +275,5 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
-
-    // Update the task if a new title was provided
-    if (newTitle != null && newTitle.isNotEmpty) {
-      setState(() {
-        _tasks[index]["title"] = newTitle;
-      });
-
-      // Show success message
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Task has been updated')));
-    }
   }
 }

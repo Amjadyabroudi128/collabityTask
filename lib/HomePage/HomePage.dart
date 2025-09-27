@@ -226,14 +226,16 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("Edit Task"),
-        content: TextField(
+        content: TextFormField(
           controller: controller,
           autofocus: true,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: "Update task title",
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
-          onSubmitted: (value) {
+          onFieldSubmitted: (value) {
             final trimmed = value.trim();
             if (trimmed.isNotEmpty) Navigator.of(ctx).pop(trimmed);
           },
@@ -241,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text("Cancel"),
+            child: const Text("Cancel",style: TextStyle(color: Colors.black, fontSize: 16),),
           ),
           TextButton(
             onPressed: () {
@@ -270,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               }
             },
-            child: const Text("Save"),
+            child: const Text("Save", style: TextStyle(color: Colors.green, fontSize: 16),),
           ),
         ],
       ),

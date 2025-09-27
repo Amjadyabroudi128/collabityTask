@@ -66,8 +66,6 @@ A simple, polished task list screen demonstrating add/edit/delete, undo, confirm
 * `TextFormField` has hint text; supports keyboard submit
 * Touch targets: ListTile + leading `Checkbox` are large
 * Color choices rely on platform theme; respects high-contrast when theming applied
-* Consider adding semantics labels and focus traversal for desktop/web
-
 ---
 
 ## 🛠️ Implementation Notes
@@ -81,19 +79,7 @@ A simple, polished task list screen demonstrating add/edit/delete, undo, confirm
 
 ---
 
-## 🧪 Testing Checklist
-
-* Add trims whitespace; empty input ignored
-* Checkbox toggles visual strikethrough and persists in list
-* Swipe delete shows SnackBar; Undo restores at same index
-* Menu delete shows confirm dialog; Cancel leaves list unchanged
-* Edit rejects empty or unchanged text; accepts valid change
-* Undo after multiple deletes works independently
-* Rapid add/delete/edit doesn’t crash (key stability)
-
----
-
-## 🚀 Running the Demo
+## 🚀 Running the app
 
 ```bash
 flutter pub get
@@ -105,6 +91,4 @@ flutter run
 ## 🔒 Known Limitations
 
 * In-memory only; state resets on hot restart/app relaunch
-* IDs are local-only; collisions avoided but not globally unique
-
 ---
